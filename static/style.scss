@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+/**
+*  SASS Model
+*
+*  Filename: style.scss
+*  Creator: Jason Fukura
+*
+*/
+
+// Variables
+@import "partials/_definitions.scss";
+//@import "partials/_media-queries.scss";
+//@import "partials/_fonts.scss";
+// Utilities
+@import "partials/_reset.scss";
+@import "partials/_grid.scss";
+// Components
+//@import "partials/_base.scss";
+//@import "partials/_type.scss";
+@import "partials/_modules.scss";
+//@import "partials/_ui.scss";

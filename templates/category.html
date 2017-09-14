@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>
+        Items in Category
+    </title>
+{% endblock %}
+
+{% block content %}
+    <div class="categories">
+        <h2>
+            Items in {{ category.name }}
+        </h2>
+
+        <ul>
+        {% for item in items %}
+            <li>
+                <a href="/{{ category.slug }}/{{ item.slug }}" >
+                    {{ item.name }}
+                </a>
+            </li>
+        {% endfor %}
+
+            <li>
+                <button id="newItemButton">Add a New Item</button>
+            </li>
+        </ul>
+
+    </div>
+    
+    <div id="modal">
+        <form id="newItemForm">
+            <input type="text" name="name" placeholder="Item Name">
+            <textarea name="description" id="" cols="30" rows="10"></textarea>
+            <input type="hidden" name="category" value="{{ category.id }}">
+            <input type="submit" value="Add Item">
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var newItem = new AddNewItem();
+
+        $('#newItemForm').submit( function( event ){
+
+            event.preventDefault();
+
+            var obj = ConvertFormToJSON(this)
+
+            obj[ 'slug' ] = obj[ 'name' ].replace(/[^A-Za-z0-9]+/g, "-").toLowerCase()
+
+            console.log(obj)
+
+            $.ajax({
+                url: '/addItem',
+                data: obj,
+                type: 'POST',
+                success: function() {
+                    window.location.reload();
+                },
+                error: function( error ) {
+                    console.log( error );
+                }
+            });
+
+        });
+
+        function ConvertFormToJSON(form){
+            var array = jQuery(form).serializeArray();
+            var json = {};
+
+            jQuery.each(array, function() {
+                json[this.name] = this.value || '';
+            });
+
+            return json;
+        }
+    </script>
+{% endblock %}

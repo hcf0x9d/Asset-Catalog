@@ -1,70 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <title>Sign In to the Application</title>
+    <script src="/static/script.js"></script>
+    <script src="/static/jquery-1.8.2.min.js"></script>
+    <script src="//apis.google.com/js/client:platform.js?onload=start"></script>
 
-    <script src="//apis.google.com/js/client:platform.js?onload=start"> </script>
 </head>
 <body>
-<!-- ======================================================================= -->
-<!-- Google Plus Sign-in Button ============================================ -->
-
-    <div id="signInButton">
-        <span class="g-signin"
-            data-scope="openid email"
-            data-clientid="530059986349-lcvlabr7u7uig58vsimpioj00t17vlit.apps.googleusercontent.com"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-        </span> <!-- Disable the data-approvalprompt=force for production -->
-    </div>
-<!-- ======================================================================= -->
-
+    <h1>Login with OAuth 2.0 </h1>
 
     <div id="result"></div>
 
-
+    <button  class="g-signin2" id="signinButton">Sign in with Google</button>
 
     <script>
+        var signinbutton = document.getElementById( 'signinButton' );
 
-        function signInCallback( authResult ) {
+        gapi.load( 'auth2', function () {
+            auth2 = gapi.auth2.init( {
+                client_id: '530059986349-lcvlabr7u7uig58vsimpioj00t17vlit.apps.googleusercontent.com'
+            } );
+        } );
+
+        signinbutton.addEventListener( 'click', function () {
+            auth2.grantOfflineAccess( { 'redirect_uri': 'postmessage' } ).then( signInCallback );
+        } )
+
+        function signInCallback( json ) {
+            var authResult = json;
+
             if ( authResult[ 'code' ] ) {
-
-                $( '#signInButton' ).attr( 'style', 'display:none' );
-
                 $.ajax( {
                     type: 'POST',
                     url: '/gconnect?state={{STATE}}',
                     processData: false,
-                    contentType: 'application/octet-stream; charset=UTF-8',
-                    data: authResult[ 'code' ],
-                    success: function ( result ) {
-                        if ( result ) {
+                    data: authResult['code'],
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function( result ) {
+                        if( result ){
+                            setTimeout( function() {
 
-                            $( '#result' ).html( 'Login Successful!<br>' + result + '<br>Redirecting...' )
+                                if ( window.location.search ) {
+                                    // We previously had attempted visiting another page, go back
+                                    var url = parseQueryString()[ 'next' ]
+                                    window.location.href = decodeURIComponent( url );
 
-                            setTimeout( function () {
-                                window.location.href = '/';
-                            }, 4000 );
+                                } else {
+
+                                    window.location.href="/";
+
+                                }
+
+                            }, 600 );
 
                         } else if ( authResult[ 'error' ] ) {
 
-                            console.log( 'An error occurred :: ' + authResult[ 'error' ])
+                            console.log( 'Something\'s gone horribly wrong: ' + authResult[ 'error' ] )
 
                         } else {
 
-                            $( '#result' ).html( 'Failed miserably, panic and scream' );
-
+                            $( '#result' ).html( 'Failed to make a server-sid call. Check the configuration console.' )
                         }
+
                     }
-                } );
+                });
             }
-        }
+    }
     </script>
+
 </body>
 </html>

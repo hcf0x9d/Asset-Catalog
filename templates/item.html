@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>
+        {{ item.Item.name }}
+    </title>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {# TODO: Finish the breadcrumbs #}
+        <ul class="breadcrumbs">
+            <li class="breadcrumbs-item"><a class="target" href="/{{ item.Category.slug }}">{{ item.Category.name }}</a></li>
+            <li class="breadcrumbs-item">{{ item.Item.name }}</li>
+        </ul>
+
+
+        <h2>
+            {{ item.Item.name }}
+        </h2>
+
+
+        <p>
+            {{ item.Item.description }}
+        </p>
+
+    </div>
+
+{% endblock %}
