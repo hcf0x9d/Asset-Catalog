@@ -10,6 +10,8 @@ Review the dependencies below, make sure everything is ready before installing
 - [Vagrant](https://www.vagrantup.com/)
 - [Udacity Vagrantfile](https://github.com/udacity/fullstack-nanodegree-vm)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+- Google+ Client Secrets(client_secrets.json)
+
 
 ### How to Install
 1. Install Vagrant & VirtualBox
