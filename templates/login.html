@@ -7,17 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Sign In to the Application</title>
+    <link rel="stylesheet" href="/static/style.css">
     <script src="/static/script.js"></script>
     <script src="/static/jquery-1.8.2.min.js"></script>
     <script src="//apis.google.com/js/client:platform.js?onload=start"></script>
 
 </head>
 <body>
-    <h1>Login with OAuth 2.0 </h1>
 
-    <div id="result"></div>
+    <main class="col-sm-4 col-sm-push-4" style="text-align: center;margin-top: 60px;">
+        <h1 class="title">Asset Catalog</h1>
 
-    <button  class="g-signin2" id="signinButton">Sign in with Google</button>
+        <p class="subtitle">You must login using Google to continue.</p>
+        <br><br>
+        <div class="g-signin2" id="signinButton" style="display:inline-block;">Sign in with Google</div>
+        <div id="result"></div>
+    </main>
 
     <script>
         var signinbutton = document.getElementById( 'signinButton' );

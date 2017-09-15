@@ -5,24 +5,42 @@
     </title>
 {% endblock %}
 
+{% block mastHeadTitle %}
+    <h1 class="title">
+        Item Details
+    </h1>
+{% endblock %}
+
+{% block breadcrumbs %}
+
+    {# TODO: Finish the breadcrumbs #}
+    <ul class="breadcrumbs">
+        <li class="breadcrumbs-item"><a href="/" class="target fa fa-fw fa-home"></a></li>
+        <li class="breadcrumbs-item"><a class="target" href="/{{ item.Category.slug }}">{{ item.Category.name }}</a></li>
+        <li class="breadcrumbs-item">{{ item.Item.name }}</li>
+    </ul>
+
+{% endblock %}
+
 {% block content %}
-    <div class="row">
-        {# TODO: Finish the breadcrumbs #}
-        <ul class="breadcrumbs">
-            <li class="breadcrumbs-item"><a class="target" href="/{{ item.Category.slug }}">{{ item.Category.name }}</a></li>
-            <li class="breadcrumbs-item">{{ item.Item.name }}</li>
-        </ul>
+    <article id="article" class="col-sm-12" data-id="{{ item.Item.id }}">
+        <header class="itemHeader">
+            <h2 class="subtitle name">
+                {{ item.Item.name }}
+            </h2>
+            <div class="controls">
+                <button onclick="editItem(this.parentNode.dataset.id)" class="btn-edit fa fa-edit"></button>
+                <button onclick="deleteItem('{{ item.Item.id }}', '{{ item.Category.slug }}')" class="btn-delete fa fa-trash-o"></button>
+            </div>
+        </header>
+        <br>
+        <div class="col-sm-6 row description">
+            <p>
+                {{ item.Item.description }}
+            </p>
 
+        </div>
 
-        <h2>
-            {{ item.Item.name }}
-        </h2>
-
-
-        <p>
-            {{ item.Item.description }}
-        </p>
-
-    </div>
+    </article>
 
 {% endblock %}

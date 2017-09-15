@@ -41,6 +41,11 @@ class DatabaseController:
         return session.query(Item).filter_by(category_id=category_id,
                                              user_id=auth_session['user_id']).all()
 
+    def read_item_list_api(self, category_id, auth_session):
+        obj = session.query(Item).filter_by(category_id=category_id,
+                                             user_id=auth_session['user_id']).all()
+        return obj
+
     def add_item(self, obj, user_id):
         """Controller for passing items within a category to DB
 
@@ -50,7 +55,7 @@ class DatabaseController:
         """
         new_item = Item()
         new_item.name = obj['name']
-        new_item.category_id = obj['category']
+        new_item.category_id = obj['category_id']
         new_item.description = obj['description']
         new_item.slug = obj['slug']
         new_item.user_id = user_id
@@ -59,7 +64,51 @@ class DatabaseController:
         session.commit()
         return
 
-    def delete_record(self, item):
-        session.delete(item)
+    def update_item(self, obj, user_id):
+        """Controller for passing items within a category to DB
+
+        :param obj: JSON passed from AJAX
+        :param user_id: User ID Integer
+        :return:
+        """
+        new_item = session.query(Item).filter_by(id=obj['id']).one()
+        new_item.name = obj['name']
+        new_item.description = obj['description']
+        print(new_item)
         session.commit()
+        return
+
+    def add_category(self, obj, user_id):
+        """Controller for passing items within a category to DB
+
+        :param obj: JSON passed from AJAX
+        :param user_id: User ID Integer
+        :return:
+        """
+        new_category = Category()
+        new_category.name = obj['name']
+        new_category.slug = obj['slug']
+        new_category.icon= obj['icon']
+        new_category.user_id = user_id
+
+        session.add(new_category)
+        session.commit()
+        return
+
+    def delete_item(self, item, user_id):
+        remove_item = session.query(Item).filter_by(id=item['id'],
+                                                    user_id=user_id).one()
+        session.delete(remove_item)
+        session.commit()
+        return
+
+    def delete_category(self, category, user_id):
+        remove_item = session.query(Category).filter_by(slug=category['slug'],
+                                                        user_id=user_id).one()
+
+        session.query(Item).filter_by(category_id=remove_item.id).update(dict(category_id=5))
+
+        session.delete(remove_item)
+        session.commit()
+
         return

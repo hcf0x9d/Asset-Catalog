@@ -6,7 +6,7 @@ import json
 import requests
 
 from functools import wraps
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask import redirect, url_for, flash, make_response
 from flask import session as login_session
 
@@ -216,10 +216,49 @@ def render_category_items(category_slug):
                            )
 
 
+@app.route('/deleteItem', methods=['POST'])
+@login_required
+def delete_item_from_category():
+    db.delete_item(request.form, login_session.get('user_id'))
+    # flash('Added an Item to the DB')
+    return json.dumps({'status': 'OK',
+                       'user': login_session.get('user_id'),
+                       'post': ''})
+
+
 @app.route('/addItem', methods=['POST'])
-def add_item_to_category():
+@login_required
+def add_item():
     db.add_item(request.form, login_session.get('user_id'))
-    flash('Added an Item to the DB')
+    flash(u'Added a new item', u'success')
+    return json.dumps({'status': 'OK',
+                       'user': login_session.get('user_id'),
+                       'post': request.form})
+
+
+@app.route('/updateItem', methods=['POST'])
+@login_required
+def update_item():
+    print(request.form)
+    db.update_item(request.form, login_session.get('user_id'))
+    flash(u'Item updated', u'success')
+    return json.dumps({'status': 'OK',
+                       'user': login_session.get('user_id'),
+                       'post': request.form})
+
+
+@app.route('/deleteCategory', methods=['POST'])
+@login_required
+def delete_category():
+    db.delete_category(request.form, login_session.get('user_id'))
+    return json.dumps({'status': 'OK'})
+
+
+@app.route('/addCategory', methods=['POST'])
+@login_required
+def add_category():
+    db.add_category(request.form, login_session.get('user_id'))
+    flash(u'Added a new category', u'success')
     return json.dumps({'status': 'OK',
                        'user': login_session.get('user_id'),
                        'post': request.form})
@@ -231,7 +270,6 @@ def render_item(category_slug, item_slug):
     categories = db.read_category_list(login_session)
     item = db.read_item(item_slug)
 
-    print(item)
     return render_template('item.html',
                            categories=categories,
                            item=item,
@@ -239,6 +277,15 @@ def render_item(category_slug, item_slug):
                            # user_id=session.get('user_id'),
                            # STATE=session.get('state')
                            )
+
+
+@app.route('/api/<string:category_slug>/items', methods=['POST'])
+def api_get_items(category_slug):
+    category = db.read_category(category_slug, login_session)
+    items = db.read_item_list_api(category.id, login_session)
+    return jsonify(status='OK', items=[item.serialize for item in items])
+
+
 #
 #
 # @app.route('/')

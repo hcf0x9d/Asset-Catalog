@@ -1,60 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" >
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
     {% block head %}
 
     {% endblock %}
 
 </head>
 <body>
-    <header>
-        <div class="page_title">
-            Catalog
+    <header class="col-sm-12 masthead">
+        <div class="col-sm-8">
+            {% block mastHeadTitle %}{% endblock %}
+            {% block mastHeadControls %}{% endblock %}
         </div>
 
-        <div id="signinButton">
-        {% if user_id == None %}
+        <div class="col-sm-4" id="signinButton">
 
-            <span class="g-signin2" id="signinButton">Sign in with Google</span>
-
-        {% else %}
-
-            <a href="{{url_for('gdisconnect')}}">
+            <a class="logout-link" href="{{url_for('gdisconnect')}}">
+                <i class="fa fa-unlock"></i>
                 Logout
             </a>
-
-        {% endif %}
 
         </div>
     </header>
 
-    <main class="content row">
+    <main class="content">
+        {% block wrapper %}
 
-        <nav class="col-sm-3">
-            <ul>
-        {% for category in categories %}
-            <li>
-                <a href="/{{category.slug}}" >
-                    {{ category.name }} <br>
-                </a>
-            </li>
-        {% endfor %}
+        <div class="header col-sm-12">
+            {% block breadcrumbs %}{% endblock %}
+        </div>
+        <nav class="col-sm-3 categories">
+            <h2 class="subtitle col-sm-12">Categories</h2>
+            <br>
+            <ul class="categoryList">
+            {% for category in categories %}
+                <li class="categoryList-item" data-id="{{ category.id }}" data-slug="{{category.slug}}">
+                    <a class="target" href="/{{category.slug}}" >
+                        <i class="fa fa-fw {{ category.icon }} icon"></i>
+                        <span class="text">{{ category.name }}</span>
+                    </a>
+                    <button title="Delete Category" onclick="deleteCategory(this.parentNode.dataset.slug)" class="btn-delete fa fa-trash-o"></button>
+                </li>
+            {% endfor %}
+                <li class="categoryList-item mod-new">
+                    <button id="newCategoryButton" class="js-new-category">Add Category</button>
+                </li>
             </ul>
         </nav>
 
         <div class="col-sm-9">
+
+
             {% block content %}
                 Dummy content here
             {% endblock %}
         </div>
+
+        {% endblock %}
     </main>
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-                <li>{{ message }}</li>
+            <ul class="flashes" style="display: none;">
+            {% for category, message in messages %}
+                <li data-type="{{ category }}">{{ message }}</li>
             {% endfor %}
             </ul>
         {% endif %}
@@ -64,6 +77,10 @@
     <script src="/static/sweetalert2.min.js"></script>
     <script src="/static/script.js"></script>
 
+    <script>
+        var newCategory = new AddNewCategory();
+
+    </script>
     {% block script %}{% endblock %}
 </body>
 </html>

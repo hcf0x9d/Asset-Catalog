@@ -1,12 +1,28 @@
 {% extends "base.html" %}
-{% block head %}
-    <title>
-        Categories - All The Categories Made By You
-    </title>
+
+{% block mastHeadTitle %}
+    <h1 class="title">
+        Catalog
+    </h1>
 {% endblock %}
 
-{% block content %}
+{% block wrapper %}
 
-    default content (zero state)
+    <div class="col-sm-12">
+        <ul class="categoryTiles">
+        {% for category in categories %}
+            <li class="tile col-sm-2">
+                <a class="tile-target col-sm-12" href="/{{category.slug}}" >
+                    <i class="fa fa-3x {{ category.icon }} icon"></i>
+                    <span class="text">{{ category.name }}</span>
+                </a>
+            </li>
+        {% endfor %}
+
+            <li class="tile col-sm-2">
+                <button class="tile-target col-sm-12 mod-new js-new-category fa fa-3x fa-plus-square-o"></button>
+            </li>
+        </ul>
+    </div>
 
 {% endblock %}

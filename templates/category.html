@@ -5,41 +5,48 @@
     </title>
 {% endblock %}
 
-{% block content %}
-    <div class="categories">
-        <h2>
-            Items in {{ category.name }}
-        </h2>
+{% block mastHeadTitle %}
+    <h1 class="title">
+        Items in {{ category.name }}
+    </h1>
+{% endblock %}
 
-        <ul>
+{% block breadcrumbs %}
+
+    <ul class="breadcrumbs">
+        <li class="breadcrumbs-item"><a href="/" class="target fa fa-fw fa-home"></a></li>
+        <li class="breadcrumbs-item">{{ category.name }}</li>
+    </ul>
+
+{% endblock %}
+
+
+{% block content %}
+        <h2 class="subtitle col-sm-12">Items</h2>
+        <ul class="itemTiles col-sm-12">
         {% for item in items %}
-            <li>
-                <a href="/{{ category.slug }}/{{ item.slug }}" >
+            <li class="tile col-sm-4" data-id="{{ item.id }}">
+                <a class="tile-target" href="/{{ category.slug }}/{{ item.slug }}" >
                     {{ item.name }}
                 </a>
+{#                <button title="Edit Item" onclick="editItem(this.parentNode.dataset.id)" class="fa fa-edit tile-target-action"></button>#}
+                <button title="Delete Item" onclick="deleteItem(this.parentNode.dataset.id)" class="fa fa-trash-o tile-target-action mod-delete"></button>
             </li>
         {% endfor %}
 
-            <li>
+            <li class="tile mod-new">
                 <button id="newItemButton">Add a New Item</button>
             </li>
         </ul>
 
-    </div>
-    
-    <div id="modal">
-        <form id="newItemForm">
-            <input type="text" name="name" placeholder="Item Name">
-            <textarea name="description" id="" cols="30" rows="10"></textarea>
-            <input type="hidden" name="category" value="{{ category.id }}">
-            <input type="submit" value="Add Item">
-        </form>
+
+        <input type="hidden" id="js-category" name="category" value="{{ category.id }}">
     </div>
 {% endblock %}
 
 {% block script %}
     <script>
-        var newItem = new AddNewItem();
+        var newItem = new AddNewItem( true );
 
         $('#newItemForm').submit( function( event ){
 

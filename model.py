@@ -94,6 +94,7 @@ class Category(Base):
     __tablename__ = 'category'
 
     name = Column(String(80), nullable=False)
+    icon = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
@@ -132,22 +133,20 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     description = Column(String(250))
     category_id = Column(Integer, ForeignKey('category.id'))
-    slug = Column(String(80), nullable=False)
     category = relationship(Category)
+    slug = Column(String(80), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
     @property
     def serialize(self):
-        """Return object data in easily serializeable format"""
-        # TODO: Fill out the endpiont information for the Item (api)
         return {
             'id': self.id,
             'name': self.name,
+            'slug': self.slug,
             'description': self.description,
-            'category': self.category,
+            'category_id': self.category_id
         }
-
 
 # End of File =============================================================== #
 engine = create_engine('sqlite:///itemcatalog.db')
