@@ -25,7 +25,7 @@ class DatabaseController:
             user = session.query(User).filter_by(email=auth_session['email']).one()
             return user
         except:
-            self.addUser(auth_session)
+            self.create_user(auth_session)
             return session.query(User).filter_by(email=auth_session['email']).one()
 
     def read_category(self, category_slug, auth_session):
