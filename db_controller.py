@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from model import Base, Category, Item, User
@@ -43,8 +43,7 @@ class DatabaseController:
                                              user_id=auth_session['user_id']).all()
 
     def read_item_list_api(self, category_id, auth_session):
-        obj = session.query(Item).filter_by(category_id=category_id,
-                                             user_id=auth_session['user_id']).all()
+        obj = session.query(Item).filter_by(category_id=category_id).all()
         return obj
 
     def add_item(self, obj, user_id):

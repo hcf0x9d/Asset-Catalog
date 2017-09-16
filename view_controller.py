@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import random
 import string
-import httplib2 
+import httplib2
 import json
 import requests
 
@@ -278,7 +278,7 @@ def render_item(category_slug, item_slug):
                            )
 
 
-@app.route('/api/<string:category_slug>/items', methods=['POST'])
+@app.route('/api/<string:category_slug>/items', methods=['POST', 'GET'])
 def api_get_items(category_slug):
     category = db.read_category(category_slug, login_session)
     items = db.read_item_list_api(category.id, login_session)
