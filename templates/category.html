@@ -29,8 +29,10 @@
                 <a class="tile-target" href="/{{ category.slug }}/{{ item.slug }}" >
                     {{ item.name }}
                 </a>
-{#                <button title="Edit Item" onclick="editItem(this.parentNode.dataset.id)" class="fa fa-edit tile-target-action"></button>#}
+
+            {% if user_id == item.user_id %}
                 <button title="Delete Item" onclick="deleteItem(this.parentNode.dataset.id)" class="fa fa-trash-o tile-target-action mod-delete"></button>
+            {% endif %}
             </li>
         {% endfor %}
 

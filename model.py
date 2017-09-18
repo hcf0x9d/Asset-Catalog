@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Configuration ============================================================= #
+# Configuration ============================================================== #
 import random
 import string
 
@@ -15,7 +15,8 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
 Base = declarative_base()
 
 # Generating a secret key for our OAuth process
-secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                     for x in range(32))
 
 
 class User(Base):
@@ -39,7 +40,6 @@ class User(Base):
     picture = Column(String(250))
     password_hash = Column(String(64))
 
-    # TODO: Not sure if we are going to go forward with passwords
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
 
@@ -100,19 +100,6 @@ class Category(Base):
     user = relationship(User)
     slug = Column(String(80), nullable=False)
 
-    @property
-    def serialize(self):
-        """For developing an API endpoint
-
-        Returns the item object for an API endpoint
-        """
-
-        # TODO: Fill out the endpiont information for the Category (api)
-        return {
-            'id': self.id,
-            'name': self.name,
-        }
-
 
 class Item(Base):
     """Table of items within the catalog. Each item is assigned a category
@@ -148,8 +135,8 @@ class Item(Base):
             'category_id': self.category_id
         }
 
-# End of File =============================================================== #
-engine = create_engine('sqlite:///itemcatalog.db')
 
+# End of File ================================================================ #
+engine = create_engine('sqlite:///itemcatalog.db')
 
 Base.metadata.create_all(engine)

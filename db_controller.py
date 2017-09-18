@@ -14,37 +14,35 @@ class DatabaseController:
     """Controller to handle database operations between view and model layers"""
 
     def create_user(self, auth_session):
-        newUser = User(name=auth_session['name'], email=auth_session['email'],
-                       picture=auth_session['picture'])
-        session.add(newUser)
+        new_user = User(name=auth_session['name'], email=auth_session['email'],
+                        picture=auth_session['picture'])
+        session.add(new_user)
         session.commit()
         return
 
     def read_user(self, auth_session):
         try:
-            user = session.query(User).filter_by(email=auth_session['email']).one()
+            user = session.query(User)\
+                .filter_by(email=auth_session['email']).one()
             return user
         except:
             self.create_user(auth_session)
-            return session.query(User).filter_by(email=auth_session['email']).one()
+            return session.query(User)\
+                .filter_by(email=auth_session['email']).one()
 
-    def read_category(self, category_slug, auth_session):
-        return session.query(Category).filter_by(slug=category_slug,
-                                                 user_id=auth_session['user_id']).one()
+    def read_category(self, category_slug):
+        return session.query(Category).filter_by(slug=category_slug).one()
 
-    def read_category_list(self, auth_session):
-        return session.query(Category).filter_by(user_id=auth_session['user_id']).all()
+    def read_category_list(self):
+        return session.query(Category).filter_by().all()
 
-    def read_item(self, item_slug):
-        return session.query(Item, Category).filter_by(slug=item_slug).join(Category).one()
+    def read_item(self, item_slug, category_slug):
+        return session.query(Item, Category)\
+            .filter_by(slug=item_slug).join(Category).filter_by(
+            slug=category_slug).one()
 
-    def read_item_list(self, category_id, auth_session):
-        return session.query(Item).filter_by(category_id=category_id,
-                                             user_id=auth_session['user_id']).all()
-
-    def read_item_list_api(self, category_id, auth_session):
-        obj = session.query(Item).filter_by(category_id=category_id).all()
-        return obj
+    def read_item_list(self, category_id):
+        return session.query(Item).filter_by(category_id=category_id).all()
 
     def add_item(self, obj, user_id):
         """Controller for passing items within a category to DB
@@ -71,7 +69,8 @@ class DatabaseController:
         :param user_id: User ID Integer
         :return:
         """
-        new_item = session.query(Item).filter_by(id=obj['id']).one()
+        new_item = session.query(Item).filter_by(id=obj['id'],
+                                                 user_id=user_id).one()
         new_item.name = obj['name']
         new_item.description = obj['description']
         print(new_item)
@@ -96,19 +95,19 @@ class DatabaseController:
         return
 
     def delete_item(self, item, user_id):
-        remove_item = session.query(Item).filter_by(id=item['id'],
-                                                    user_id=user_id).one()
+        remove_item = session.query(Item)\
+            .filter_by(id=item['id'], user_id=user_id).one()
         session.delete(remove_item)
         session.commit()
         return
 
     def delete_category(self, category, user_id):
-        remove_item = session.query(Category).filter_by(slug=category['slug'],
-                                                        user_id=user_id).one()
+        remove_item = session.query(Category)\
+            .filter_by(slug=category['slug'], user_id=user_id).one()
 
-        session.query(Item).filter_by(category_id=remove_item.id).update(dict(category_id=5))
+        session.query(Item)\
+            .filter_by(category_id=remove_item.id).update(dict(category_id=5))
 
         session.delete(remove_item)
         session.commit()
-
         return

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
     <title>
-        {{ item.Item.name }}
+        {{ item.name }}
     </title>
 {% endblock %}
 
@@ -16,27 +16,33 @@
     {# TODO: Finish the breadcrumbs #}
     <ul class="breadcrumbs">
         <li class="breadcrumbs-item"><a href="/" class="target fa fa-fw fa-home"></a></li>
-        <li class="breadcrumbs-item"><a class="target" href="/{{ item.Category.slug }}">{{ item.Category.name }}</a></li>
-        <li class="breadcrumbs-item">{{ item.Item.name }}</li>
+        <li class="breadcrumbs-item"><a class="target" href="/{{ item_category.slug
+                }}">{{ item_category.name }}</a></li>
+        <li class="breadcrumbs-item">{{ item.name }}</li>
     </ul>
 
 {% endblock %}
 
 {% block content %}
-    <article id="article" class="col-sm-12" data-id="{{ item.Item.id }}">
+    <article id="article" class="col-sm-12" data-id="{{ item.id }}">
         <header class="itemHeader">
             <h2 class="subtitle name">
-                {{ item.Item.name }}
+                {{ item.name }}
             </h2>
+            {% if user_id == item.user_id %}
+
             <div class="controls">
                 <button onclick="editItem(this.parentNode.dataset.id)" class="btn-edit fa fa-edit"></button>
-                <button onclick="deleteItem('{{ item.Item.id }}', '{{ item.Category.slug }}')" class="btn-delete fa fa-trash-o"></button>
+                <button onclick="deleteItem('{{ item.id }}', '{{ item_category.slug
+                        }}')" class="btn-delete fa fa-trash-o"></button>
             </div>
+
+            {% endif %}
         </header>
         <br>
         <div class="col-sm-6 row description">
             <p>
-                {{ item.Item.description }}
+                {{ item.description }}
             </p>
 
         </div>

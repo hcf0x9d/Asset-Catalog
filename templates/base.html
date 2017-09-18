@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" >
+    <link rel="shortcut icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     {% block head %}
@@ -43,7 +45,9 @@
                         <i class="fa fa-fw {{ category.icon }} icon"></i>
                         <span class="text">{{ category.name }}</span>
                     </a>
+                {% if category.user_id == user_id %}
                     <button title="Delete Category" onclick="deleteCategory(this.parentNode.dataset.slug)" class="btn-delete fa fa-trash-o"></button>
+                {% endif %}
                 </li>
             {% endfor %}
                 <li class="categoryList-item mod-new">
