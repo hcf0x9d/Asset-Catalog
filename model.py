@@ -100,6 +100,19 @@ class Category(Base):
     user = relationship(User)
     slug = Column(String(80), nullable=False)
 
+    @property
+    def serialize(self):
+        """For developing an API endpoint
+
+        Returns the item object for an API endpoint
+        """
+
+        # TODO: Fill out the endpiont information for the Category (api)
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
 
 class Item(Base):
     """Table of items within the catalog. Each item is assigned a category
