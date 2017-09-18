@@ -29,3 +29,6 @@ The following are open:
 
 Category Items JSON: `/api/<string:category_slug>/items`
     - Displays items for a specific category
+
+Item JSON: `/api/<string:category_slug>/<string:item_slug>`
+    - Displays information for a single item
